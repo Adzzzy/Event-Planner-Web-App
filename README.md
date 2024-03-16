@@ -1,5 +1,5 @@
 # Event Planner Web App
-A group project revolving around the create of an web application for planning events. 
+A group project revolving around the creation of a web application for planning events. 
 It features account creation, logging in, creating events, viewing others' events, and viewing and managing your own events.
 It also includes some additional security measures such as OAuth login using google, password hashing with Argon2, and prepared statements to prevent SQL Injection.
 
