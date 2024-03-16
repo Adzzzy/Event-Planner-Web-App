@@ -1,0 +1,91 @@
+h1 {
+    font-size: 5em;
+}
+
+body {
+    font-family: Roboto;
+}
+
+.aStyle {
+    color: black;
+    text-decoration: none;
+}
+
+#app {
+    width: 95%;
+    margin: auto;
+}
+
+#btn {
+    background-color: #6677ff;
+    border-radius: 0.65rem;
+    color: white;
+    margin: 5px;
+}
+
+#divCenter {
+    text-align: center;
+    margin-top: 2em;
+}
+
+#signup {
+    text-align: center;
+}
+
+#split {
+    display: flex;
+}
+
+#view {
+    font-size: 15px;
+    background-color: blue;
+    border-radius: 10px;
+    color: white;
+}
+
+#searchbtn {
+    color: blue;
+    border-radius: 10px;
+    padding:0;
+}
+
+#searchbar {
+    border-radius: 10px;
+}
+
+#searchbtn {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.input-group {
+    height: 50px;
+    border-radius: 10px 10px 10px 10px;
+}
+
+.searchbar {
+    border-radius:10px 10px 10px 10px;
+    border-color: blue;
+    width: 90%;
+}
+
+.icons {
+    text-align: center;
+    font-size: 28px;
+}
+
+.card {
+    box-shadow: 0 2px 4px 0 #808080;
+    transition: 0.1s;
+    padding: 6px 2px 6px 8px;
+    margin: 20px 0 20px 0;
+}
+
+.card:hover {
+    box-shadow: 0 6px 12px 0 #808080;
+}
+
+.nextevent {
+    padding: 10px 2px 10px 16px;
+    font-size:20px;
+}
