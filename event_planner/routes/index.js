@@ -4,7 +4,7 @@ var path = require('path');
 
 var argon2 = require('argon2');
 
-const CLIENT_ID = '1010449510569-aie0lr3qf5ah05fh0e06ltnae1tql7b3.apps.googleusercontent.com';
+const CLIENT_ID = '969440842699-0ckc8mvqtsrss89glnbgh349te6a9le8.apps.googleusercontent.com';
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -229,8 +229,8 @@ router.post('/createEvent', function (req, res, next) {
     res.sendStatus(403);
     return;
   }
-
-  if ('eventName' in req.body && 'startDate' in req.body && 'endDate' in req.body && 'AddressStreetNo' in req.body && 'AddressStreetName' in req.body && 'AddressSuburb' in req.body && 'AddressPostcode' in req.body) {
+  //important to note that this only checks for the existence of these keys in the body, they could still be empty "" or null
+  if ('eventName' in req.body && 'startDate' in req.body && 'startTime' in req.body && 'endDate' in req.body && 'endTime' in req.body && 'AddressStreetNo' in req.body && 'AddressStreetName' in req.body && 'AddressSuburb' in req.body && 'AddressPostcode' in req.body) {
 
     req.pool.getConnection(function (err, connection) {
       if (err) {
@@ -240,8 +240,8 @@ router.post('/createEvent', function (req, res, next) {
       }
 
       let userid = req.session.user.userID;
-      let query = "INSERT INTO events (eventHost,eventName, startDate,endDate,AddressStreetNo,AddressStreetName,AddressSuburb,AddressPostcode) VALUES(?,?,?,?,?,?,?,?);";
-      connection.query(query, [userid, req.body.eventName, req.body.startDate, req.body.endDate, req.body.AddressStreetNo, req.body.AddressStreetName, req.body.AddressSuburb, req.body.AddressPostcode], function (err, rows, fields) {
+      let query = "INSERT INTO events (eventHost,eventName, startDate, startTime, endDate, endTime, AddressStreetNo,AddressStreetName,AddressSuburb,AddressPostcode) VALUES(?,?,?,?,?,?,?,?,?,?);";
+      connection.query(query, [userid, req.body.eventName, req.body.startDate, req.body.startTime, req.body.endDate, req.body.endTime, req.body.AddressStreetNo, req.body.AddressStreetName, req.body.AddressSuburb, req.body.AddressPostcode], function (err, rows, fields) {
         connection.release();
         if (err) {
           console.log(err);
@@ -311,7 +311,8 @@ router.get('/events', function (req, res, next) {
       return;
     }
 
-    let query = "SELECT * FROM events;";
+    let query = `SELECT eventID,eventHost,eventName,startDate,startTime,endDate,endTime,AddressStreetNo,AddressStreetName,AddressSuburb,AddressPostcode,eventLink,username,givenName,familyName
+    FROM events INNER JOIN users ON events.eventHost = users.userID;`;
     connection.query(query, function (error, rows, fields) {
       connection.release();
       if (error) {
@@ -329,26 +330,66 @@ router.get('/events', function (req, res, next) {
 
 router.post('/setavailability', function (req, res, next) {
 
-  req.pool.getConnection(function (error, connection) {
-    if (error) {
-      console.log(error);
-      res.sendStatus(500);
-      return;
-    }
+  if ('eventID' in req.body && 'availabilityStart' in req.body && 'availabilityEnd' in req.body) {
 
-    let userID = req.session.user.userID;
-    let eventID = parseInt(req.body.eventID);
-    let query = "INSERT INTO availability (userID, eventID, availabilityStart, availabilityEnd) VALUES (?, ?, ?, ?);";
-    connection.query(query,[userID, eventID, req.body.availabilityStart, req.body.availabilityEnd ], function (error, rows, fields) {
-      connection.release();
+    req.pool.getConnection(function (error, connection) {
       if (error) {
         console.log(error);
         res.sendStatus(500);
         return;
       }
-      res.json(rows);
+
+      let userID = req.session.user.userID;
+      let eventID = parseInt(req.body.eventID);
+
+      //First check to see if availability is already set for this event by this user
+      let query = "SELECT * FROM availability WHERE userID = ? AND eventID = ?;";
+      connection.query(query,[userID, eventID], function (error, rows, fields) {
+        if (error) {
+          console.log(error);
+          res.sendStatus(500);
+          return;
+        }
+
+        //if availability has already been set before, update the values
+        if (rows.length > 0) {
+          let query = "UPDATE availability SET availabilityStart = ?, availabilityEnd = ? WHERE userID = ? AND eventID = ?;";
+          connection.query(query,[req.body.availabilityStart, req.body.availabilityEnd, userID, eventID ], function (error, rows, fields) {
+            connection.release();
+            if (error) {
+              console.log(error);
+              res.sendStatus(500);
+              return;
+            }
+            else {
+              console.log('availability updated');
+              res.sendStatus(200);
+            }
+          });
+        }
+        //otherwise insert into the table instead
+        else {
+          let query = "INSERT INTO availability (userID, eventID, availabilityStart, availabilityEnd) VALUES (?, ?, ?, ?);";
+          connection.query(query,[userID, eventID, req.body.availabilityStart, req.body.availabilityEnd ], function (error, rows, fields) {
+            connection.release();
+            if (error) {
+              console.log(error);
+              res.sendStatus(500);
+              return;
+            }
+            else {
+              console.log('availability added');
+              res.sendStatus(200);
+            }
+          });
+        }
+      });
     });
-  });
+  }
+  else {
+    console.log('bad request');
+    res.sendStatus(400);
+  }
 });
 
 router.post('/finaliseTime', function (req, res, next) {
@@ -362,7 +403,7 @@ router.post('/finaliseTime', function (req, res, next) {
         return;
       }
       let eventID = parseInt(req.body.eventID);
-      let query = "INSERT INTO events (startTime, endTime) VALUES (?,?) WHERE eventID = ?;";
+      let query = "UPDATE events SET startTime = ?, endTime = ? WHERE eventID = ?;";
       connection.query(query, [req.body.startTime, req.body.endTime,eventID], function (err, rows, fields) {
         connection.release();
         if (err) {
@@ -381,8 +422,13 @@ router.post('/finaliseTime', function (req, res, next) {
   }
 });
 
+router.get('/availabilityuser', function (req, res, next) {
 
-router.get('/getavailability', function (req, res, next) {
+  if (!('user' in req.session)) {
+    console.log("User is not logged in");
+    res.sendStatus(403);
+    return;
+  }
 
   req.pool.getConnection(function (error, connection) {
     if (error) {
@@ -391,7 +437,37 @@ router.get('/getavailability', function (req, res, next) {
       return;
     }
 
-    let query = "SELECT * FROM availability WHERE eventID=?;";
+    let id = req.session.user.userID;
+
+    let query = "SELECT * FROM availability where userID=?;";
+    connection.query(query, [id], function (error, rows, fields) {
+      connection.release(); // release connection
+      if (error) {
+        console.log(error);
+        res.sendStatus(500);
+        return;
+      }
+      res.json(rows); //send response
+    });
+
+  });
+
+});
+
+router.get('/availabilityevent', function (req, res, next) {
+
+  //Read the eventid url arg of the GET request
+  evID = req.query.eventid;
+
+  req.pool.getConnection(function (error, connection) {
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    let query = `SELECT availability.userID,eventID,availabilityStart,availabilityEnd,username,givenName,familyName
+    FROM availability INNER JOIN users ON availability.userID = users.userID WHERE eventID=?;`;
     connection.query(query, [evID], function (error, rows, fields) {
       connection.release();
       if (error) {
@@ -406,7 +482,7 @@ router.get('/getavailability', function (req, res, next) {
 
 });
 
-
+/*
 let evID = null;
 
 router.post('/sendid', function (req, res, next) {
@@ -415,6 +491,6 @@ router.post('/sendid', function (req, res, next) {
     res.send();
   }
 
-});
+});*/
 
 module.exports = router;

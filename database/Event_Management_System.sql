@@ -1,4 +1,4 @@
-CREATE DATABASE `EventManagement`;
+CREATE DATABASE IF NOT EXISTS `EventManagement`;
 USE `EventManagement`;
 
 CREATE TABLE `users` (
@@ -34,7 +34,7 @@ CREATE TABLE `events` (
 );
 
 CREATE TABLE `availability` (
-  `userID` int NOT NULL UNIQUE,
+  `userID` int NOT NULL,
   `eventID` int NOT NULL,
   `availabilityStart` time,
   `availabilityEnd` time,

@@ -1,0 +1,33 @@
+#version: '3.8'
+
+services:
+  app:
+    build: #Will build nodejs image from dockerfile so that the workdirectory, files, and the necessary npm commands can be specified there
+      context: ./event_planner
+    ports:
+      - "3000:3000" #Port 3000 on host machine will map to port 3000 (port the express server is listening on) in nodejs container
+    depends_on: #Makes sure database service starts before the express server and code within the nodejs container
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql:9
+    volumes: 
+      - ./database:/docker-entrypoint-initdb.d #map the sql files containing the queries for creating the database and tables into docker-entrypoint-initdb.d (a directory automatically executed database initialisation scripts that only run if the database directory is empty)
+      - db-data:/var/lib/mysql #maps the persistent volume db-data to the directory that mysql stores database files within the container
+    environment:
+      #For demonstration purposes will have root password set to empty.
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_DATABASE: EventManagement
+      #can create another user too if need be
+      #MYSQL_USER: user
+      #MYSQL_PASSWORD: userpass
+
+    restart: unless-stopped
+
+#create a persistent volume for storing database data
+volumes:
+  db-data:
+
+#A bridge type network is created by default for the containers to be able to communicate with each other

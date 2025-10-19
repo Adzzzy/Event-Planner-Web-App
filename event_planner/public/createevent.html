@@ -16,7 +16,7 @@
         <script src="/javascripts/ajax.js" defer> </script>
         <script src="/javascripts/vueinst.js" defer></script>
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-        <title>WDC Event Planner Welcome</title>
+        <title>Create Event</title>
     </head>
     <body >
         <div id="app" class="container">
@@ -41,65 +41,77 @@
 
                                         <form class="mx-1 mx-md-4">
                                             <div class="d-flex flex-row align-items-center mb-4">
-                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <i class="fas fa-circle-info fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" id="form3Example1c" class="form-control eventName"  />
                                                     <label class="form-label" for="form3Example1c" >Event Name</label>
+                                                    <input type="text" id="form3Example1c" class="form-control eventName"  />
                                                 </div>
                                             </div>
 
                                             <div class="d-flex flex-row align-items-center mb-4">
-                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <i class="fas fa-hourglass-start fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="date" id="form3Example1c" class="form-control eventStartDate" />
                                                     <label class="form-label" for="form3Example1c" >Event Start Date</label>
+                                                    <input type="date" id="form3Example1c" class="form-control eventStartDate" />
                                                 </div>
                                             </div>
 
                                             <div class="d-flex flex-row align-items-center mb-4">
-                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <i class="fas fa-clock fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" id="form3Example1c" class="form-control eventStartTime" />
                                                     <label class="form-label" for="form3Example1c" >Event Start Time</label>
+                                                    <input type="time" id="form3Example1c" class="form-control eventStartTime" />
                                                 </div>
                                             </div>
 
                                             <div class="d-flex flex-row align-items-center mb-4">
-                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <i class="fas fa-hourglass-end fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="date" id="form3Example1c" class="form-control eventEndDate" />
                                                     <label class="form-label" for="form3Example1c" >Event End Date</label>
+                                                    <input type="date" id="form3Example1c" class="form-control eventEndDate" />
                                                 </div>
                                             </div>
 
                                             <div class="d-flex flex-row align-items-center mb-4">
-                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <i class="fas fa-clock fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" id="form3Example1c" class="form-control eventStartTime" />
                                                     <label class="form-label" for="form3Example1c" >Event End Time</label>
+                                                    <input type="time" id="form3Example1c" class="form-control eventEndTime" />
                                                 </div>
                                             </div>
 
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-location-dot fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" id="form3Example4c" class="form-control eventStreetNo" />
-                                                    <label class="form-label" for="form3Example4c" >Event Street Number</label>
+                                                    <label class="form-label" for="form3Example1c" >Event Street Number</label>
+                                                    <input type="number" id="form3Example1c" class="form-control eventStreetNo" />
                                                 </div>
+                                            </div>
 
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-location-dot fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" id="form3Example4c" class="form-control eventStreet" />
-                                                    <label class="form-label" for="form3Example4c" >Event Street Address</label>
+                                                    <label class="form-label" for="form3Example1c" >Event Street Address</label>
+                                                    <input type="text" id="form3Example1c" class="form-control eventStreet" />
                                                 </div>
+                                            </div>
 
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-location-dot fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" class="form-control eventSuburb" />
                                                     <label class="form-label">Event Suburb</label>
+                                                    <input type="text" class="form-control eventSuburb" />
                                                 </div>
+                                            </div>
 
 
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-location-dot fa-lg me-3 mt-4 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
-                                                    <input type="text" class="form-control eventPostcode" />
                                                     <label class="form-label" >Event Postcode</label>
+                                                    <input type="number" class="form-control eventPostcode" />
                                                 </div>
+                                            </div>
 
                                             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                                 <button type="button" class="btn btn-primary btn-lg" onclick="eventCreate1()">Create Event</button>

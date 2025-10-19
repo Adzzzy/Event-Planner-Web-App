@@ -6,13 +6,16 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var session = require('express-session');
 var app = express();
 
 var dbConnectionPool = mysql.createPool({
-    host: 'localhost',
-    database: 'EventManagement'
+    //if the database is running on the same host as the express server, use localhost
+    host: 'db', //if running database in separate docker container, then reference that container's name to connect to instead of localhost, as that will resolve to the dynamic ip given to the container by compose
+    database: 'EventManagement',
+    user: 'root',
+    password: ''
 });
 
 app.use(function (req, res, next) {
