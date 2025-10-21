@@ -36,7 +36,7 @@
         <div class="input-group">
             <input type="search" class="searchbar" id="searchbar" placeholder="Search for events" aria-label="Search"
                 aria-describedby="search-addon" />
-            <button type="button" id="searchbtn" class="btn-outline-primary">
+            <button type="button" id="searchbtn" onclick="addEvent()">
                 <i class="fas fa-search"></i>
             </button>
             <select name="view" id="view" @change="onChange($event)" v-model="key">

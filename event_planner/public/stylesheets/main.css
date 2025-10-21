@@ -50,6 +50,11 @@ body {
     color: white;
     margin: 5px;
     width: 50%;
+    transition: all 0.1s ease;
+}
+
+#signupbtn:hover {
+    background-color: rgb(30, 74, 146);
 }
 
 #image {
@@ -160,4 +165,9 @@ body {
     background-color: rgb(59, 113, 202);
     color: white;
     border-radius: 2rem;
+    transition: all 0.1s ease;
+}
+
+#login_button:hover {
+    background-color: rgb(30, 74, 146);
 }

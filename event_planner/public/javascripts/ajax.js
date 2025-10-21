@@ -212,6 +212,14 @@ function eventCreate1() {
 
 function addEvent() {
 
+    resetEvents();
+
+    var searchQuery = document.getElementById("searchbar").value;
+    //Create regexp we want to match
+    const searchRegex = new RegExp(`.*${searchQuery}.*`, "i"); //Use template literal to insert searchQuery into a regexp. "i" indicates case insensitivity
+    // in regexps period represents a wildcard for a single character, while an asterisk represents any number of repetitions of the preceeding character.
+
+
     for (let event of events_list) {
 
         //First check if event end date has already passed, and if so, skip this event and continue to the next iteration of the for loop
@@ -252,6 +260,18 @@ function addEvent() {
         let address = event.AddressStreetNo + " " + event.AddressStreetName + ", " + event.AddressSuburb + " " + event.AddressPostcode;
         let date = event.startDate;
 
+        hostString = "Host: " + eventHostName;
+
+        detailsString = "Location: " + address + "           Start: " + startDate + starttime + "    End: " + endDate + endtime;
+
+        //Now that we have our event strings formatted, check against search query
+        //If there is a search value, if it isn't contained within the event details skip this event and continue to the next iteration of the for loop
+        if (searchQuery != "") {
+            if (!searchRegex.test(eventName) && !searchRegex.test(hostString) && !searchRegex.test(detailsString)) {
+                continue;
+            }
+        }
+
         let list = document.querySelector(".list");
         let card = document.createElement("div");
         card.classList.add("card");
@@ -265,10 +285,10 @@ function addEvent() {
         eHeading.innerText = eventName;
 
         let pHost = document.createElement("p");
-        pHost.innerText = "Host: " + eventHostName;
+        pHost.innerText = hostString;
 
         let p1 = document.createElement("pre");
-        p1.innerText = "Location: " + address + "           Start: " + startDate + starttime + "    End: " + endDate + endtime;
+        p1.innerText = detailsString;
         p1.style.whiteSpace = "pre-wrap"; //Allow the pre to maintain its spacing but also still wrap to next line if needed.
 
         let inpdiv = document.createElement("div");
@@ -307,6 +327,7 @@ function addEvent() {
         lb2.innerText = "End Time:";
 
         let btn = document.createElement("button");
+        btn.classList.add("effectbtn");
         btn.classList.add("setAvl");
         btn.innerText = "Set Availability";
 
@@ -353,7 +374,6 @@ function getEvents() {
         if (this.readyState == 4 && this.status == 200) {
             events_list = JSON.parse(this.responseText);
             await getUserAvailability(); //Await keyword means that function will continue but will pause the function once it reaches a line that needs user_avls, continuing with the other functions in the mean time.
-            resetEvents();
             addEvent();
         } else if (this.readyState == 4 && this.status >= 400) {
             alert("Please log in!");
@@ -557,6 +577,7 @@ function getMyEvents() {
                 lb2.innerText = "End Time:";
 
                 let btn = document.createElement("button");
+                btn.classList.add("effectbtn");
                 btn.classList.add("setTime");
                 btn.innerText = "Set Times";
 
@@ -590,8 +611,8 @@ function getMyEvents() {
 
                 button.style.marginBottom = "10px";
 
+                button.classList.add("effectbtn");
                 button.classList.add("btn");
-                /*button.classList.add ("signup"); */
 
                 button.setAttribute("card-event-id", my_events[i].eventID);
                 button.setAttribute("onclick", 'getEventAvailability(this.getAttribute("card-event-id"));'); 
