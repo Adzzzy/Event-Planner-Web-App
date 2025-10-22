@@ -219,6 +219,11 @@ function addEvent() {
     const searchRegex = new RegExp(`.*${searchQuery}.*`, "i"); //Use template literal to insert searchQuery into a regexp. "i" indicates case insensitivity
     // in regexps period represents a wildcard for a single character, while an asterisk represents any number of repetitions of the preceeding character.
 
+    //Counter used in grid layout to divide events within rows accordingly.
+    var counter = 0;
+
+    //this is where events will append to.
+    let list = document.querySelector(".list");
 
     for (let event of events_list) {
 
@@ -272,10 +277,31 @@ function addEvent() {
             }
         }
 
-        let list = document.querySelector(".list");
+        //different arrangement additions needed if grid
+        if (vueinst.viewType == "grid") {
+            //A new row is created every third element, or every second element if on mobile.
+            let cols = 3;
+            if (/Android|Mobi|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                cols = 2;
+            }
+            if (counter % cols == 0) {
+                let row = document.createElement("div");
+                row.classList.add("row"); //add row class so bootstrap can arrange accordingly.
+
+                list = document.querySelector(".list"); //Set list back to the main list element before adding the next row
+                list.appendChild(row);
+
+                list = row; //operations from here will append events to the row div instead.
+            }   
+        }
+        counter += 1; //increment counter
+        
         let card = document.createElement("div");
         card.classList.add("card");
 
+        if (vueinst.viewType == "grid") {
+            card.classList.add("col"); //For grid view, card is made into a column within the row, using a bootstrap column
+        }
 
         let nextevent = document.createElement("div");
         nextevent.classList.add("nextevent");
