@@ -240,8 +240,11 @@ function sortEvents() { //Sort events based on sort value selected
     else if (vueinst.sortVal == "startAsc") {
         events_list.sort(function (a, b) {
             
-            var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
-            var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+            var time1 = a.startTime != null ? a.startTime : "23:59:59";
+            var time2 = b.startTime != null ? b.startTime : "23:59:59";
+
+            var date1 = new Date(a.startDate.split("T")[0]+"T"+ time1); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.startDate.split("T")[0]+"T"+ time2);
 
             return date1 - date2;
 
@@ -251,8 +254,11 @@ function sortEvents() { //Sort events based on sort value selected
     else if (vueinst.sortVal == "startDesc") {
         events_list.sort(function (a, b) {
             
-            var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
-            var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+            var time1 = a.startTime != null ? a.startTime : "23:59:59";
+            var time2 = b.startTime != null ? b.startTime : "23:59:59";
+
+            var date1 = new Date(a.startDate.split("T")[0]+"T"+ time1); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.startDate.split("T")[0]+"T"+ time2);
 
             return date2 - date1;
 
@@ -262,8 +268,11 @@ function sortEvents() { //Sort events based on sort value selected
     else if (vueinst.sortVal == "endAsc") {
         events_list.sort(function (a, b) {
             
-            var date1 = new Date(a.endDate.split("T00:00:00.000Z")[0]+"T"+a.endTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
-            var date2 = new Date(b.endDate.split("T00:00:00.000Z")[0]+"T"+b.endTime);
+            var time1 = a.endTime != null ? a.endTime : "23:59:59";
+            var time2 = b.endTime != null ? b.endTime : "23:59:59";
+
+            var date1 = new Date(a.endDate.split("T")[0]+"T"+ time1); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.endDate.split("T")[0]+"T"+ time2);
 
             return date1 - date2;
 
@@ -273,8 +282,11 @@ function sortEvents() { //Sort events based on sort value selected
     if (vueinst.sortVal == "endDesc") {
         events_list.sort(function (a, b) {
             
-            var date1 = new Date(a.endDate.split("T00:00:00.000Z")[0]+"T"+a.endTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
-            var date2 = new Date(b.endDate.split("T00:00:00.000Z")[0]+"T"+b.endTime);
+            var time1 = a.endTime != null ? a.endTime : "23:59:59";
+            var time2 = b.endTime != null ? b.endTime : "23:59:59";
+
+            var date1 = new Date(a.endDate.split("T")[0]+"T"+ time1); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.endDate.split("T")[0]+"T"+ time2);
 
             return date2 - date1;
 
@@ -329,8 +341,8 @@ function addEvent() {
 
         let eventHostName = event.givenName + " " + event.familyName;
 
-        let startDate = event.startDate.split("T00:00:00.000Z");
-        let endDate = event.endDate.split("T00:00:00.000Z");
+        let startDate = event.startDate.split("T");
+        let endDate = event.endDate.split("T");
 
         //format dates as dd/mm/yyyy instead of yyyy-mm-dd
         startDate = new Date(startDate[0]);
@@ -575,8 +587,11 @@ function getMyEvents() {
 
             //sort events by date and time
             my_events.sort(function (a, b) {
-                var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
-                var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+                var time1 = a.startTime != null ? a.startTime : "23:59:59";
+                var time2 = b.startTime != null ? b.startTime : "23:59:59";
+
+                var date1 = new Date(a.startDate.split("T")[0]+"T"+ time1); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+                var date2 = new Date(b.startDate.split("T")[0]+"T"+ time2);
 
                 return date1 - date2;
             });
@@ -617,8 +632,8 @@ function getMyEvents() {
 
             let datePre = document.createElement('pre');
 
-            var startdate = my_events[0].startDate.split("T00:00:00.000Z");
-            var enddate = my_events[0].endDate.split("T00:00:00.000Z");
+            var startdate = my_events[0].startDate.split("T"); //Date is followed by a time string in form T00:00:00.000Z, split on T to just get date
+            var enddate = my_events[0].endDate.split("T");
 
             //format dates as dd/mm/yyyy instead of yyyy-mm-dd
             startdate = new Date(startdate[0]);
@@ -744,8 +759,8 @@ function getMyEvents() {
                 para.style.marginTop = "5px"
 
                 //prepare the date strings
-                startdate = my_events[i].startDate.split("T00:00:00.000Z");
-                enddate = my_events[i].endDate.split("T00:00:00.000Z");
+                startdate = my_events[i].startDate.split("T");
+                enddate = my_events[i].endDate.split("T");
 
                 startdate = new Date(startdate[0]);
                 enddate = new Date(enddate[0]);

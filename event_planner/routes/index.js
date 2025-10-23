@@ -411,7 +411,7 @@ router.post('/finaliseTime', function (req, res, next) {
           res.sendStatus(500);
           return;
         } else {
-          console.log('event created');
+          console.log('time finalised');
           res.sendStatus(200);
         }
       });
