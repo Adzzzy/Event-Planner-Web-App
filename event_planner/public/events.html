@@ -35,7 +35,7 @@
 
         <div class="search-group">
             <input type="search" class="searchbar" id="searchbar" placeholder="Search for events" aria-label="Search"
-                aria-describedby="search-addon" />
+                aria-describedby="search-addon" @input="onChange($event)" @keydown.enter="removeFocus($event)" @keydown.esc="removeFocus($event)"><!--vue @input triggers as user types. Also remove focus when enter is pressed-->
             <button type="button" id="searchbtn" onclick="addEvent()">
                 <i class="fas fa-search"></i>
             </button>

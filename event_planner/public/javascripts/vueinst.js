@@ -15,6 +15,9 @@ var vueinst = new Vue({
                 this.show_list = false
             }*/
             addEvent();
+        },
+        removeFocus(event) {
+            event.target.blur();
         }
     }
 });
