@@ -103,7 +103,7 @@ body {
     background-color: rgb(59, 113, 202);
     color: white;
     border-radius: 0 10px 10px 0;
-    margin-right: 10px;
+    margin-right: 5px;
     padding-left: 10px;
     padding-right: 15px;
     transition: all 0.1 ease; /*for transitions of properties when hovering or pressed*/
@@ -123,7 +123,29 @@ body {
 #searchbar {
     border-radius:10px 0 0 10px;
     padding-left: 10px;
-    min-width: 50%;
+    flex: 1 1 50%; /* flex will allow the searchbar to grow and shrink, with a starting width of 50%*/
+    min-width: 40%;
+    max-width: 80%;
+}
+
+#sort {
+    font-size: 15px;
+    background-color: rgb(59, 113, 202);
+    border-radius: 10px;
+    color: white;
+    margin-right: 5px;
+    padding-left: 5px;
+}
+
+select optgroup {
+    color: rgb(61, 60, 60); 
+    font-weight: bold;
+    font-style: italic;
+    background-color: aquamarine;
+}
+
+select option {
+    color: white;
 }
 
 #view {
@@ -131,14 +153,14 @@ body {
     background-color: rgb(59, 113, 202);
     border-radius: 10px;
     color: white;
-    margin-left:auto;
+    margin-left: auto;
     padding-left: 5px;
 }
 
-
-.input-group {
+.search-group {
     height: 30px;
-    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .icons {

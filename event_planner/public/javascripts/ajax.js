@@ -210,8 +210,95 @@ function eventCreate1() {
     xhttp.send(JSON.stringify({ 'eventName': eventName, 'startDate': eventStartDate, 'startTime': eventStartTime, 'endDate': eventEndDate, 'endTime': eventEndTime, 'AddressStreetNo': eventStreetNo, 'AddressStreetName': eventStreetName, 'AddressSuburb': eventSuburb, 'AddressPostcode': eventPostcode }));
 }
 
+function sortEvents() { //Sort events based on sort value selected
+
+    //use array sort method and define a function used for each comparison (Negative return: first argument should come first.  Positive Return: second argument should come first)
+
+    if (vueinst.sortVal == "nameAsc") {
+        events_list.sort(function (a, b) {
+            return a.eventName.localeCompare(b.eventName, undefined, { sensitivity: 'base' }); //compare givenNames and returns a number. Use default locale, and case insensitive.
+        });
+    }
+
+    else if (vueinst.sortVal == "nameDesc") {
+        events_list.sort(function (a, b) {
+            return b.eventName.localeCompare(a.eventName, undefined, { sensitivity: 'base' }); //For descending, reverse the order so subtraction op will be positive if "a" is smaller than "b" and vice versa
+        });
+    }
+
+    else if (vueinst.sortVal == "hostAsc") {
+        events_list.sort(function (a, b) {
+            return a.givenName.localeCompare(b.givenName, undefined, { sensitivity: 'base' });
+        }); 
+    }
+    else if (vueinst.sortVal == "hostDesc") {
+        events_list.sort(function (a, b) {
+            return b.givenName.localeCompare(a.givenName, undefined, { sensitivity: 'base' });
+        });
+    }
+
+    else if (vueinst.sortVal == "startAsc") {
+        events_list.sort(function (a, b) {
+            
+            var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+
+            return date1 - date2;
+
+        });
+    }
+
+    else if (vueinst.sortVal == "startDesc") {
+        events_list.sort(function (a, b) {
+            
+            var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+
+            return date2 - date1;
+
+        });
+    }
+
+    else if (vueinst.sortVal == "endAsc") {
+        events_list.sort(function (a, b) {
+            
+            var date1 = new Date(a.endDate.split("T00:00:00.000Z")[0]+"T"+a.endTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.endDate.split("T00:00:00.000Z")[0]+"T"+b.endTime);
+
+            return date1 - date2;
+
+        });
+    }
+
+    if (vueinst.sortVal == "endDesc") {
+        events_list.sort(function (a, b) {
+            
+            var date1 = new Date(a.endDate.split("T00:00:00.000Z")[0]+"T"+a.endTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+            var date2 = new Date(b.endDate.split("T00:00:00.000Z")[0]+"T"+b.endTime);
+
+            return date2 - date1;
+
+        });
+    }
+
+    else if (vueinst.sortVal == "createdAsc") {
+        events_list.sort(function (a, b) {
+            return a.eventID - b.eventID;
+        });
+    }
+
+    else if (vueinst.sortVal == "createdDesc") {
+        events_list.sort(function (a, b) {
+            return b.eventID - a.eventID;
+        });
+    }
+
+    return;
+}
+
 function addEvent() {
 
+    //Clear the page of events
     resetEvents();
 
     var searchQuery = document.getElementById("searchbar").value;
@@ -225,6 +312,10 @@ function addEvent() {
     //this is where events will append to.
     let list = document.querySelector(".list");
 
+    //sort the event array
+    sortEvents();
+
+    //loop through and add the events
     for (let event of events_list) {
 
         //First check if event end date has already passed, and if so, skip this event and continue to the next iteration of the for loop
@@ -482,11 +573,12 @@ function getMyEvents() {
                 eventslist.appendChild(img);
             }
 
-            //sort events by date
+            //sort events by date and time
             my_events.sort(function (a, b) {
-                var c = new Date(a.startDate);
-                var d = new Date(b.startDate);
-                return c - d;
+                var date1 = new Date(a.startDate.split("T00:00:00.000Z")[0]+"T"+a.startTime); //Create date object in the format YYYY-MM-DDTHH:MM:SS
+                var date2 = new Date(b.startDate.split("T00:00:00.000Z")[0]+"T"+b.startTime);
+
+                return date1 - date2;
             });
 
             //Check if event end date has already passed, and if so, remove the event from my_events. Filter function doesn't work in place like the sort function, so overwrite my_events.

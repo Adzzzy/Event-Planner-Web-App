@@ -2,7 +2,8 @@ var vueinst = new Vue({
     el: "#app",
     data: {
         viewType: "list",
-        //show_list: true
+        //show_list: true,
+        sortVal: ""
     },
     methods: {
         onChange(event) {

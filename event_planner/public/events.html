@@ -33,12 +33,48 @@
         });
         </script>
 
-        <div class="input-group">
+        <div class="search-group">
             <input type="search" class="searchbar" id="searchbar" placeholder="Search for events" aria-label="Search"
                 aria-describedby="search-addon" />
             <button type="button" id="searchbtn" onclick="addEvent()">
                 <i class="fas fa-search"></i>
             </button>
+            <select name="sort" id="sort" @change="onChange($event)" v-model="sortVal">
+                <optgroup label="Ascending">
+                    <option value="nameAsc">
+                        Name
+                    </option>
+                    <option value="hostAsc">
+                        Host
+                    </option>
+                    <option value="startAsc">
+                        Start
+                    </option>
+                    <option value="endAsc">
+                        End
+                    </option>
+                    <option value="createdAsc">
+                        Made
+                    </option>
+                </optgroup>
+                <optgroup label="Descending">
+                    <option value="nameDesc">
+                        Name
+                    </option>
+                    <option value="hostDesc">
+                        Host
+                    </option>
+                    <option value="startDesc">
+                        Start
+                    </option>
+                    <option value="endDesc">
+                        End
+                    </option>
+                    <option value="createdDesc">
+                        Made
+                    </option>
+                </optgroup>
+            </select>
             <select name="view" id="view" @change="onChange($event)" v-model="viewType">
                 <option value="list">
                     List
