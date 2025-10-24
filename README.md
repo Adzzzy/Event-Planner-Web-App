@@ -1,9 +1,10 @@
 # Event Planner Web App
 A group project revolving around the creation of a web application for planning events. 
 It features account creation, logging in, creating events, viewing others' events, and viewing and managing your own events.
+A search functionality is provided for finding events, as well as options for sorting events by various event attributes.
 Additionally, users may set the times they are available for events, with these being viewable by the event host, who may use them to reschedule events to a more suitable time.
 
-The web application is built using Node.js for server-side scripting, integrating with the HTML, JavaScript, and CSS used for client-side operations. 
+The web application is built using Node.js for server-side scripting, integrating with the HTML, JavaScript, and CSS used for client-side operations. Vue.js and Bootstrap are also used to enhance JavaScript and CSS capabilities, respectively.
 Further, Asynchronous JavaScript and XML (AJAX) is taken advantage of on the client-side for the creation and handling of asynchronous HTTP requests to the server.
 The server itself is created and handled using the HTTP module of Node.js, with routing, redirection, middleware, and caching being handled with the Express.js framework.
 A database is also used for the web app, utilising MySQL for database management as well as the handling of connections and SQL queries initiated by the server.

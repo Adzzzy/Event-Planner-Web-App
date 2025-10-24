@@ -21,11 +21,25 @@ body {
     width: 95%;
 }
 
+.nothing {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
 .btn {
     background-color: rgb(59, 113, 202);
     border-radius: 0.65rem;
     color: white;
     transition: all 0.1s ease;
+}
+
+.deletebtn {
+    background-color: rgb(202, 59, 59);
+    border-radius: 0.65rem;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .startTimeInput {

@@ -30,7 +30,7 @@ CREATE TABLE `events` (
   `AddressPostcode` varchar(4),
   `eventLink` varchar(8),
   PRIMARY KEY (eventID),
-  FOREIGN KEY (`eventHost`) REFERENCES `users` (`userID`)
+  FOREIGN KEY (`eventHost`) REFERENCES `users` (`userID`) ON DELETE CASCADE
 );
 
 CREATE TABLE `availability` (
@@ -39,7 +39,7 @@ CREATE TABLE `availability` (
   `availabilityStart` time,
   `availabilityEnd` time,
   PRIMARY KEY (`eventID`, `userID`),
-  FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
-  FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`)
+  FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE,
+  FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`) ON DELETE CASCADE
 );
 

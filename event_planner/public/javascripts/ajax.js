@@ -310,7 +310,7 @@ function sortEvents() { //Sort events based on sort value selected
 
 function addEvent() {
 
-    //Clear the page of events
+    //Clear the page of events (For when addEvent() is triggered without a page reload, i.e. when searching or sorting)
     resetEvents();
 
     var searchQuery = document.getElementById("searchbar").value;
@@ -483,17 +483,23 @@ function addEvent() {
 function resetEvents() {
 
     let list = document.querySelector(".list");
-    let img = document.createElement("img");
-
-    if (length < 1) {
-        img.classList.add("nothing");
-        img.src = "/images/nothingtosee.jpg";
-        list.appendChild(img);
-    }
-
+    
     while (list.children.length > 0) {
         list.children[0].remove();
     }
+
+    /* Adds an image when there are no events
+    if (events_list.length < 1) {
+        let cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+
+        let img = document.createElement("img");
+        img.classList.add("nothing");
+        img.src = "/images/nothingtosee.jpg";
+        
+        cardDiv.appendChild(img);
+        list.appendChild(cardDiv);
+    }*/
 }
 
 function getEvents() {
@@ -561,6 +567,37 @@ function finaliseTime(param) {
     xhttp.send(JSON.stringify({ 'eventID': eventID, 'startTime': finalStartTime, 'endTime': finalEndTime }));
 }
 
+function deleteEvent(param) {
+    var eventID = param.getAttribute("card-event-id");
+
+    //1
+    var xhttp = new XMLHttpRequest();
+
+    //4
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            //alert("Event deleted!");
+            document.getElementsByClassName("card " + eventID)[0].remove();
+        } else if (this.readyState == 4 && this.status >= 400) {
+            alert("Could not delete event!");
+        }
+    };
+
+    let confirmDelete = confirm("You are about to delete an event.");
+
+    if (confirmDelete == true) {
+        //2
+        xhttp.open("POST", "/deleteEvent", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        
+        //3
+        xhttp.send(JSON.stringify({ 'eventID': eventID }));
+    }
+    else {
+        return;
+    }
+}
+
 let my_events = []; //Declare globally
 
 function getMyEvents() {
@@ -583,6 +620,7 @@ function getMyEvents() {
                 img.classList.add("nothing");
                 img.src = "images/nothingtosee.jpg";
                 eventslist.appendChild(img);
+                return;
             }
 
             //sort events by date and time
@@ -735,6 +773,9 @@ function getMyEvents() {
                 let classevt = my_events[i].eventID;
                 classdiv.classList.add(classevt);
 
+                //allows elements within the div to be given an absolute position relative to the div
+                classdiv.style.position = "relative";
+
                 let buttondiv = document.createElement('div');
 
 
@@ -757,6 +798,19 @@ function getMyEvents() {
                 para.innerText = my_events[i].eventName;
                 para.style.font = "25px Roboto ";
                 para.style.marginTop = "5px"
+
+                let delBtn = document.createElement('button');
+
+                delBtn.classList.add("effectbtn");
+                delBtn.classList.add("deletebtn");
+                delBtn.innerText = "X";
+
+                delBtn.setAttribute("card-event-id", my_events[i].eventID);
+                delBtn.setAttribute("onclick", "deleteEvent(this)");
+
+                delBtn.style.position = "absolute"; //Give button absolute position relative to the parent div
+                delBtn.style.top = "6px"; //6px from the top edge of the parent div
+                delBtn.style.right = "10px"; //10px from the right edge of the parent div
 
                 //prepare the date strings
                 startdate = my_events[i].startDate.split("T");
@@ -783,6 +837,7 @@ function getMyEvents() {
 
                 //classdiv.appendChild(brk);
                 classdiv.appendChild(para);
+                classdiv.appendChild(delBtn);
                 classdiv.appendChild(pref);
                 classdiv.appendChild(buttondiv);
                 classdiv.appendChild(para2);

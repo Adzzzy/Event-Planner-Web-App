@@ -330,6 +330,12 @@ router.get('/events', function (req, res, next) {
 
 router.post('/setavailability', function (req, res, next) {
 
+  if (!('user' in req.session)) {
+    console.log("User is not logged in");
+    res.sendStatus(403);
+    return;
+  }
+
   if ('eventID' in req.body && 'availabilityStart' in req.body && 'availabilityEnd' in req.body) {
 
     req.pool.getConnection(function (error, connection) {
@@ -394,6 +400,12 @@ router.post('/setavailability', function (req, res, next) {
 
 router.post('/finaliseTime', function (req, res, next) {
 
+  if (!('user' in req.session)) {
+    console.log("User is not logged in");
+    res.sendStatus(403);
+    return;
+  }
+
   if ('startTime' in req.body && 'endTime' in req.body && 'eventID' in req.body) {
 
     req.pool.getConnection(function (err, connection) {
@@ -402,9 +414,12 @@ router.post('/finaliseTime', function (req, res, next) {
         res.sendStatus(500);
         return;
       }
+
       let eventID = parseInt(req.body.eventID);
-      let query = "UPDATE events SET startTime = ?, endTime = ? WHERE eventID = ?;";
-      connection.query(query, [req.body.startTime, req.body.endTime,eventID], function (err, rows, fields) {
+      let userID = req.session.user.userID;
+
+      let query = "UPDATE events SET startTime = ?, endTime = ? WHERE eventID = ? AND eventHost = ?;"; //AND eventHost for extra security against unauthorized post request from different user.
+      connection.query(query, [req.body.startTime, req.body.endTime, eventID, userID], function (err, rows, fields) {
         connection.release();
         if (err) {
           console.log(err);
@@ -456,6 +471,12 @@ router.get('/availabilityuser', function (req, res, next) {
 
 router.get('/availabilityevent', function (req, res, next) {
 
+  if (!('user' in req.session)) {
+    console.log("User is not logged in");
+    res.sendStatus(403);
+    return;
+  }
+
   //Read the eventid url arg of the GET request
   evID = req.query.eventid;
 
@@ -480,6 +501,45 @@ router.get('/availabilityevent', function (req, res, next) {
 
   });
 
+});
+
+router.post('/deleteEvent', function (req, res, next) {
+
+  if (!('user' in req.session)) {
+    console.log("User is not logged in");
+    res.sendStatus(403);
+    return;
+  }
+
+  if ('eventID' in req.body) {
+
+    req.pool.getConnection(function (err, connection) {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+        return;
+      }
+
+      let eventID = parseInt(req.body.eventID);
+      let userID = req.session.user.userID;
+      
+      let query = "DELETE FROM events WHERE eventID = ? AND eventHost = ?;"; //AND eventHost for extra security against unauthorized post request from different user.
+      connection.query(query, [eventID, userID], function (err, rows, fields) {
+        connection.release();
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+          return;
+        } else {
+          console.log('event deleted');
+          res.sendStatus(200);
+        }
+      });
+    });
+  } else {
+    console.log('bad request');
+    res.sendStatus(400);
+  }
 });
 
 /*
